@@ -169,8 +169,17 @@ function retry(func, attempts) {
  * cos(3.141592653589793) ends
  *
  */
-function logger(/* func, logFunc */) {
-  throw new Error('Not implemented');
+function logger(func, logFunc) {
+  return function temp(...args) {
+    const argumentsString = args.reduce((acc, cur) => acc.concat(JSON.stringify(cur)), []).join(',');
+    const firstLog = `${func.name}(${argumentsString}) starts`;
+    logFunc(firstLog);
+    const result = func(...args);
+    const secondLog = `${func.name}(${argumentsString}) ends`;
+    // console.log(secondLog);
+    logFunc(secondLog);
+    return result;
+  };
 }
 
 
@@ -187,8 +196,8 @@ function logger(/* func, logFunc */) {
  *   partialUsingArguments(fn, 'a','b','c')('d') => 'abcd'
  *   partialUsingArguments(fn, 'a','b','c','d')() => 'abcd'
  */
-function partialUsingArguments(/* fn, ...args1 */) {
-  throw new Error('Not implemented');
+function partialUsingArguments(fn, ...args) {
+  return (...args2) => fn(...args, ...args2);
 }
 
 
@@ -209,8 +218,21 @@ function partialUsingArguments(/* fn, ...args1 */) {
  *   getId4() => 7
  *   getId10() => 11
  */
-function getIdGeneratorFunction(/* startFrom */) {
-  throw new Error('Not implemented');
+function getIdGeneratorFunction(startFrom) {
+  let count = startFrom;
+  function* generator() {
+    while (true) {
+      yield count;
+      count += 1;
+    }
+  }
+  const gen = generator();
+  const func = gen.next.bind(gen);
+  function temp() {
+    const result = func();
+    return result.value;
+  }
+  return temp;
 }
 
 
