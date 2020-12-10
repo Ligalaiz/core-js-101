@@ -23,11 +23,13 @@
  *   getComposition(Math.sin, Math.asin)(x) => Math.sin(Math.asin(x))
  *
  */
-function getComposition(/* f, g */) {
-  throw new Error('Not implemented');
+function getComposition(f, g) {
+  return function tempFunction(x) {
+    const first = g(x);
+    const second = f(first);
+    return second;
+  };
 }
-
-
 /**
  * Returns the math power function with the specified exponent
  *
@@ -44,8 +46,10 @@ function getComposition(/* f, g */) {
  *   power05(16) => 4
  *
  */
-function getPowerFunction(/* exponent */) {
-  throw new Error('Not implemented');
+function getPowerFunction(exponent) {
+  return function tempFunction(num) {
+    return num ** exponent;
+  };
 }
 
 
@@ -62,8 +66,22 @@ function getPowerFunction(/* exponent */) {
  *   getPolynom(8)     => y = 8
  *   getPolynom()      => null
  */
-function getPolynom() {
-  throw new Error('Not implemented');
+function getPolynom(...args) {
+  return function tempFunction(x) {
+    let result = null;
+    if (args.length === 1) {
+      [result] = args;
+    }
+    if (args.length === 2) {
+      const [, second] = args;
+      result = x + second;
+    }
+    if (args.length === 3) {
+      const [first, second, third] = args;
+      result = first * x ** first + second * x + third;
+    }
+    return result;
+  };
 }
 
 
@@ -81,8 +99,19 @@ function getPolynom() {
  *   ...
  *   memoizer() => the same random number  (next run, returns the previous cached result)
  */
-function memoize(/* func */) {
-  throw new Error('Not implemented');
+function memoize(func) {
+  const cache = {};
+  return function temp(...args) {
+    const n = args[0];
+    let result;
+    if (n in cache) {
+      result = cache[n];
+    } else {
+      result = func(n);
+      cache[n] = result;
+    }
+    return result;
+  };
 }
 
 
@@ -101,8 +130,19 @@ function memoize(/* func */) {
  * }, 2);
  * retryer() => 2
  */
-function retry(/* func, attempts */) {
-  throw new Error('Not implemented');
+function retry(func, attempts) {
+  let count = attempts;
+  return function temp() {
+    do {
+      try {
+        const result = func();
+        return result;
+      } catch (error) {
+        count = count ? count -= 1 : count;
+      }
+    } while (count);
+    return null;
+  };
 }
 
 

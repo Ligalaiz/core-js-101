@@ -108,8 +108,8 @@ function isTriangle(a, b, c) {
  * NOTE: Please use canvas coordinate space (https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes#The_grid),
  * it differs from Cartesian coordinate system.
  *
- * @param {object} rect1
- * @param {object} rect2
+ * @param {object} A
+ * @param {object} B
  * @return {bool}
  *
  * @example:
@@ -120,7 +120,7 @@ function isTriangle(a, b, c) {
  *   { top:20, left:20, width: 20, height: 20 }    =>  false
  *
  */
-function doRectanglesOverlap(/* rect1, rect2 */) {
+function doRectanglesOverlap(/* A, B */) {
   throw new Error('Not implemented');
 }
 
