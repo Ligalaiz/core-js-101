@@ -120,8 +120,18 @@ function isTriangle(a, b, c) {
  *   { top:20, left:20, width: 20, height: 20 }    =>  false
  *
  */
-function doRectanglesOverlap(/* A, B */) {
-  throw new Error('Not implemented');
+function doRectanglesOverlap(A, B) {
+  const x1 = A.top;
+  const y1 = A.left;
+  const x2 = A.top + A.height;
+  const y2 = A.top + A.width;
+  const x3 = B.top;
+  const y3 = B.left;
+  const x4 = B.top + B.height;
+  const y4 = B.top + B.width;
+
+  return !(x2 <= x3 || y2 <= y3 || x1 >= x4 || y1 >= y4);
+  // return (x1 < x4) && (x3 < x2) && (y1 < y4) && (y3 < y2);
 }
 
 
@@ -151,10 +161,11 @@ function doRectanglesOverlap(/* A, B */) {
  *   { center: { x:0, y:0 }, radius:10 },  { x:10, y:10 }   => false
  *
  */
-function isInsideCircle(/* circle, point */) {
-  throw new Error('Not implemented');
+function isInsideCircle(circle, point) {
+  const { center, radius } = circle;
+  const distance = Math.sqrt((point.x - center.x) ** 2 + (point.y - center.y) ** 2);
+  return distance < radius;
 }
-
 
 /**
  * Returns the first non repeated char in the specified strings otherwise returns null.
@@ -167,8 +178,15 @@ function isInsideCircle(/* circle, point */) {
  *   'abracadabra'  => 'c'
  *   'entente' => null
  */
-function findFirstSingleChar(/* str */) {
-  throw new Error('Not implemented');
+function findFirstSingleChar(str) {
+  const arr = [...str];
+  for (let i = 0; i < arr.length; i += 1) {
+    const reg = new RegExp(`${arr[i]}`, 'g');
+    if ((str.match(reg).length === 1)) {
+      return arr[i];
+    }
+  }
+  return null;
 }
 
 
@@ -194,8 +212,13 @@ function findFirstSingleChar(/* str */) {
  *   5, 3, true, true   => '[3, 5]'
  *
  */
-function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
-  throw new Error('Not implemented');
+function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
+  const temp = JSON.stringify([a, b].sort((first, second) => first - second));
+  return [...temp].map((item) => {
+    if (item === '[' && !isStartIncluded) return '(';
+    if (item === ']' && !isEndIncluded) return ')';
+    return item;
+  }).join('').replace(/,/, ', ');
 }
 
 
@@ -211,8 +234,8 @@ function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
  * 'rotator' => 'rotator'
  * 'noon' => 'noon'
  */
-function reverseString(/* str */) {
-  throw new Error('Not implemented');
+function reverseString(str) {
+  return str.split('').reverse().join('');
 }
 
 
@@ -228,8 +251,8 @@ function reverseString(/* str */) {
  *   87354 => 45378
  *   34143 => 34143
  */
-function reverseInteger(/* num */) {
-  throw new Error('Not implemented');
+function reverseInteger(num) {
+  return Number(String(num).split('').reverse().join(''));
 }
 
 
@@ -253,8 +276,32 @@ function reverseInteger(/* num */) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const ccnStr = String(ccn);
+  const len = ccnStr.length;
+  const ccnArr = ccnStr.split('').map(Number);
+  const luhn = ccnArr[len - 1];
+
+  const cond = (predicate, value, fn) => {
+    let result;
+    if (predicate) {
+      result = fn(value);
+    } else {
+      result = value;
+    }
+    return result;
+  };
+
+  const makeDouble = (current, idx) => cond(idx % 2 === 0, current, (x) => x * 2);
+  const checkForNine = (current) => cond(current > 9, current, (x) => x - 9);
+
+  const total = ccnArr.slice(0, -1)
+    .reverse()
+    .map(makeDouble)
+    .map(checkForNine)
+    .reduce((acc, cur) => acc + cur, luhn);
+
+  return total % 10 === 0;
 }
 
 /**
@@ -300,7 +347,12 @@ function getDigitalRoot(num) {
  *   '{[(<{[]}>)]}' = true
  */
 function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+  // if (str.length === 0) return true;
+
+  // [...str].map((bracket) => {
+
+  // })
+  // return false;
 }
 
 
